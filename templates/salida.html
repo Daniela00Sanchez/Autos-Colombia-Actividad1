@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block titulo %}Registrar salida{% endblock %}
+{% block contenido %}
+<h1>Registrar salida</h1><p class="subtitulo">Registra la salida de un vehículo que se encuentra dentro del parqueadero.</p>
+<div class="dos-columnas"><section class="panel"><h2>Buscar vehículo</h2>
+<form method="get" action="{{ url_for('salida') }}" class="campos"><div class="campo"><label for="consulta_placa">PLACA DEL VEHÍCULO</label><input id="consulta_placa" name="placa" value="{{ placa }}" placeholder="KLP482" maxlength="8" required></div><button class="boton" type="submit">Buscar entrada activa</button></form>
+{% if resultado %}
+<hr><h2>Movimiento encontrado</h2>
+{% if resultado.movimiento %}<div class="datos"><div><small>PLACA</small><strong>{{ resultado.placa }}</strong></div><div><small>TIPO</small><strong>{{ 'Carro' if resultado.vehiculo.tipo=='CARRO' else 'Moto' }}</strong></div><div><small>FECHA Y HORA DE ENTRADA</small><strong>{{ resultado.movimiento.fecha_hora_entrada }}</strong></div><div><small>ESTADO</small><strong>Dentro</strong></div></div>{% else %}<p class="mensaje error">No hay una entrada activa para esta placa.</p>{% endif %}
+{% endif %}
+<form method="post" action="{{ url_for('salida') }}"><input type="hidden" name="_csrf" value="{{ csrf_token }}"><input type="hidden" name="placa" value="{{ placa }}"><div class="botones"><button class="boton" type="submit" {% if not resultado or not resultado.movimiento %}disabled{% endif %}>Confirmar salida</button><a class="boton secundario" href="{{ url_for('inicio') }}">Cancelar</a></div></form>
+</section><aside class="panel"><h2>Al confirmar la salida</h2><p>✓ Registra fecha y hora</p><p>✓ Finaliza el movimiento</p><p>✓ Libera un cupo</p><hr><p class="ayuda">No se registra ningún cobro en esta iteración.</p></aside></div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block titulo %}Panel principal{% endblock %}
+{% block contenido %}
+<h1>Panel principal</h1><p class="subtitulo">Consulta rápida de vehículos estacionados y acceso a las funciones principales.</p>
+<div class="indicadores">
+  <div class="indicador"><span>Vehículos dentro</span><strong>{{ datos.dentro }}</strong></div>
+  <div class="indicador"><span>Carros</span><strong>{{ datos.carros }}</strong></div>
+  <div class="indicador"><span>Motocicletas</span><strong>{{ datos.motos }}</strong></div>
+  <div class="indicador"><span>Cupos disponibles</span><strong>{{ datos.disponibles }}</strong><small>de {{ datos.capacidad }} espacios</small></div>
+</div>
+<div class="dos-columnas">
+  <section class="panel"><h2>Vehículos que están en el parqueadero</h2>
+    <div class="tabla-scroll"><table><thead><tr><th>PLACA</th><th>TIPO</th><th>HORA DE ENTRADA</th><th>ESTADO</th></tr></thead>
+    <tbody>{% for v in datos.vehiculos %}<tr><td><strong>{{ v.placa }}</strong></td><td>{{ 'Carro' if v.tipo=='CARRO' else 'Moto' }}</td><td>{{ v.fecha_hora_entrada }}</td><td><span class="etiqueta">Dentro</span></td></tr>{% else %}<tr><td colspan="4">No hay vehículos estacionados.</td></tr>{% endfor %}</tbody></table></div>
+    <p class="ayuda">Mostrando {{ datos.vehiculos|length }} de {{ datos.dentro }} vehículos estacionados.</p>
+  </section>
+  <section class="panel acciones"><h2>Acciones principales</h2>
+    <a class="boton" href="{{ url_for('entrada') }}">Registrar entrada</a>
+    <a class="boton secundario" href="{{ url_for('salida') }}">Registrar salida</a>
+    <a class="boton secundario" href="{{ url_for('consultar') }}">Consultar placa</a>
+    <p class="ayuda">Servicio por mensualidad.<br>Sin espacio fijo asignado.</p>
+  </section>
+</div>
+{% endblock %}

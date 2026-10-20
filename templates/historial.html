@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block titulo %}Historial{% endblock %}
+{% block contenido %}
+<h1>Historial de movimientos</h1><p class="subtitulo">Consulta las entradas y salidas realizadas por carros y motocicletas.</p>
+<section class="panel"><h2>Filtros de búsqueda</h2><form method="get" action="{{ url_for('ver_historial') }}" class="campos cuatro">
+<div class="campo"><label for="placa">PLACA</label><input id="placa" name="placa" maxlength="8" value="{{ placa }}" placeholder="Todas"></div>
+<div class="campo"><label for="desde">DESDE</label><input type="date" id="desde" name="desde" value="{{ desde }}"></div>
+<div class="campo"><label for="hasta">HASTA</label><input type="date" id="hasta" name="hasta" value="{{ hasta }}"></div>
+<button class="boton" type="submit">Buscar</button></form></section>
+<section class="panel espacio"><h2>Movimientos registrados</h2>
+<div class="tabla-scroll"><table><thead><tr><th>PLACA</th><th>TIPO</th><th>ENTRADA</th><th>SALIDA</th><th>ESTADO</th></tr></thead><tbody>
+{% for m in registros %}<tr><td><strong>{{ m.placa }}</strong></td><td>{{ 'Carro' if m.tipo=='CARRO' else 'Moto' }}</td><td>{{ m.fecha_hora_entrada }}</td><td>{{ m.fecha_hora_salida or '—' }}</td><td>{% if m.fecha_hora_salida %}<span class="etiqueta fin">Finalizado</span>{% else %}<span class="etiqueta">Dentro</span>{% endif %}</td></tr>{% else %}<tr><td colspan="5">No se encontraron movimientos.</td></tr>{% endfor %}
+</tbody></table></div><p class="ayuda">El historial conserva las entradas y salidas de cada vehículo. Se muestran como máximo 150 registros.</p></section>
+{% endblock %}

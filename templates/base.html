@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Autos Colombia{% endblock %} | Iteración 1</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+<header class="encabezado"><div><div class="marca">AUTOS COLOMBIA</div><div class="submarca">Sistema de registro de entradas y salidas</div></div><div class="servicio">Atención 24/7</div></header>
+<div class="distribucion">
+<aside class="menu"><div class="menu-titulo">MENÚ PRINCIPAL</div>
+<nav aria-label="Menú principal">
+  <a class="{% if activa=='inicio' %}actual{% endif %}" href="{{ url_for('inicio') }}">Inicio</a>
+  <a class="{% if activa=='consultar' %}actual{% endif %}" href="{{ url_for('consultar') }}">Consultar placa</a>
+  <a class="{% if activa=='entrada' %}actual{% endif %}" href="{{ url_for('entrada') }}">Registrar entrada</a>
+  <a class="{% if activa=='salida' %}actual{% endif %}" href="{{ url_for('salida') }}">Registrar salida</a>
+  <a class="{% if activa=='novedades' %}actual{% endif %}" href="{{ url_for('novedades') }}">Novedades</a>
+  <a class="{% if activa=='historial' %}actual{% endif %}" href="{{ url_for('ver_historial') }}">Historial de movimientos</a>
+</nav><div class="menupie">Proyecto académico<br>Iteración 1</div></aside>
+<main>
+  {% with mensajes=get_flashed_messages(with_categories=true) %}
+  {% for categoria, mensaje in mensajes %}<div class="mensaje {{ categoria }}" role="status">{{ mensaje }}</div>{% endfor %}
+  {% endwith %}
+  {% block contenido %}{% endblock %}
+  <footer>Autos Colombia | Proyecto académico · Iteración 1 · Datos de demostración</footer>
+</main>
+</div>
+</body>
+</html>

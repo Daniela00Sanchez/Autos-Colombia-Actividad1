@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block titulo %}Consultar placa{% endblock %}
+{% block contenido %}
+<h1>Consultar placa</h1><p class="subtitulo">Verifica si un carro o motocicleta está autorizado antes de permitir su entrada.</p>
+<div class="dos-columnas">
+ <section class="panel"><h2>Consulta del vehículo</h2>
+ <form method="get" action="{{ url_for('consultar') }}" class="campos"><div class="campo"><label for="placa">PLACA DEL VEHÍCULO</label><input id="placa" name="placa" value="{{ placa }}" maxlength="8" placeholder="Ejemplo: MNV345" required></div><button class="boton" type="submit">Buscar placa</button></form>
+ {% if resultado %}
+ <hr><h2>Resultado de la consulta</h2>
+ {% if not resultado.registrado %}<div class="mensaje error">Placa no registrada. No puede ingresar.</div>
+ {% else %}<div class="datos"><div><small>PLACA</small><strong>{{ resultado.vehiculo.placa }}</strong></div><div><small>TIPO</small><strong>{{ 'Carro' if resultado.vehiculo.tipo=='CARRO' else 'Motocicleta' }}</strong></div><div><small>VIGENCIA HASTA</small><strong>{{ resultado.vehiculo.vigencia_hasta }}</strong></div><div><small>ESTADO</small><strong>{{ 'Dentro del parqueadero' if resultado.movimiento else 'Fuera del parqueadero' }}</strong></div></div>
+ <div class="mensaje {{ 'exito' if resultado.puede_entrar else 'error' }}">{{ 'AUTORIZADO PARA ENTRAR' if resultado.puede_entrar else 'NO HABILITADO PARA ENTRAR' }}</div>
+ {% if resultado.puede_entrar %}<a class="boton" href="{{ url_for('entrada', placa=resultado.placa) }}">Continuar al registro de entrada</a>{% endif %}
+ {% endif %}{% endif %}
+ </section>
+ <aside class="panel"><h2>Condiciones de ingreso</h2><p>✓ Placa registrada previamente</p><p>✓ Autorización vigente</p><p>✓ Sin entrada activa</p><p>✓ Cupo disponible</p><hr><p class="ayuda">Aquí no se administran clientes, pagos ni celdas.</p></aside>
+</div>
+{% endblock %}

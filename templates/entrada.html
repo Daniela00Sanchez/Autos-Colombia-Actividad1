@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block titulo %}Registrar entrada{% endblock %}
+{% block contenido %}
+<h1>Registrar entrada</h1><p class="subtitulo">Registra el ingreso de un vehículo autorizado al parqueadero.</p>
+<div class="dos-columnas"><section class="panel"><h2>Datos de entrada</h2>
+<form method="post" action="{{ url_for('entrada') }}">
+<input type="hidden" name="_csrf" value="{{ csrf_token }}">
+<div class="campo"><label for="placa">PLACA DEL VEHÍCULO</label><input id="placa" name="placa" value="{{ placa }}" maxlength="8" placeholder="MNV345" required></div>
+<p class="ayuda">La fecha y hora se registrarán automáticamente al confirmar.</p>
+{% if resultado and resultado.registrado %}<div class="mensaje {{ 'exito' if resultado.puede_entrar else 'error' }}">{{ 'Vehículo autorizado. Mensualidad vigente hasta '+resultado.vehiculo.vigencia_hasta+'.' if resultado.puede_entrar else 'No cumple todas las condiciones de ingreso.' }}</div>{% endif %}
+<div class="botones"><button class="boton" type="submit">Confirmar entrada</button><a class="boton secundario" href="{{ url_for('inicio') }}">Cancelar</a></div>
+</form></section>
+<aside class="panel"><h2>Validaciones del sistema</h2><p>✓ Placa registrada</p><p>✓ Mensualidad vigente</p><p>✓ Cupo disponible</p><p>✓ Sin entrada activa</p><hr><p class="ayuda">El vehículo utiliza cualquier espacio disponible, sin celda fija.</p></aside></div>
+{% endblock %}
