@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Autos Colombia{% endblock %} | Iteración 2</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head><body>
+<header class="encabezado"><div><div class="marca">AUTOS COLOMBIA</div>
+<div class="submarca">Sistema de registro de entradas y salidas · Iteración 2</div></div>
+{% if usuario_actual %}<div class="cuenta"><span>{{ usuario_actual.nombre }} · {{ usuario_actual.rol|capitalize }}</span>
+<form method="post" action="{{ url_for('salir') }}"><input type="hidden" name="_csrf" value="{{ csrf_token }}"><button type="submit" class="enlace-claro">Salir</button></form></div>{% endif %}</header>
+<div class="distribucion">
+{% if usuario_actual %}
+<aside class="menu"><div class="menu-titulo">MENÚ PRINCIPAL</div><nav aria-label="Menú principal">
+<a class="{% if activa=='inicio' %}actual{% endif %}" href="{{url_for('inicio')}}">Panel principal</a>
+<a class="{% if activa=='consultar' %}actual{% endif %}" href="{{url_for('consultar')}}">Consultar placa</a>
+<a class="{% if activa=='vehiculo' %}actual{% endif %}" href="{{url_for('vehiculo_nuevo')}}">Registrar vehículo</a>
+<a class="{% if activa=='entrada' %}actual{% endif %}" href="{{url_for('entrada')}}">Registrar entrada</a>
+<a class="{% if activa=='salida' %}actual{% endif %}" href="{{url_for('salida')}}">Registrar salida</a>
+<a class="{% if activa=='celdas' %}actual{% endif %}" href="{{url_for('celdas')}}">Disponibilidad de celdas</a>
+<a class="{% if activa=='historial' %}actual{% endif %}" href="{{url_for('ver_historial')}}">Historial</a>
+{% if usuario_actual.rol=='administrador' %}
+<a class="{% if activa=='usuarios' %}actual{% endif %}" href="{{url_for('usuarios')}}">Gestión de usuarios</a>
+<a class="{% if activa=='auditoria' %}actual{% endif %}" href="{{url_for('auditoria')}}">Auditoría</a>
+<a class="{% if activa=='novedades' %}actual{% endif %}" href="{{url_for('novedades')}}">Novedades</a>
+{% endif %}
+</nav><div class="menupie">Perfil: {{ usuario_actual.rol|capitalize }}<br>Autos Colombia</div></aside>
+{% endif %}
+<main {% if not usuario_actual %}class="pagina-login"{% endif %}>
+{% with mensajes=get_flashed_messages(with_categories=true) %}
+{% for categoria,mensaje in mensajes %}<div class="mensaje {{categoria}}" role="status">{{mensaje}}</div>{% endfor %}
+{% endwith %}
+{% block contenido %}{% endblock %}
+<footer>Autos Colombia · Proyecto académico · Iteración 2</footer>
+</main></div></body></html>

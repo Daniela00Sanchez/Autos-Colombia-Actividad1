@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block titulo %}Inicio de sesión{% endblock %}
+{% block contenido %}
+<h1>Inicio de sesión</h1><p class="subtitulo">Ingresa con la cuenta asignada para utilizar el sistema del parqueadero.</p>
+<section class="panel login-box"><h2>Acceso al sistema</h2>
+<form method="post" action="{{url_for('iniciar_sesion')}}">
+<input type="hidden" name="_csrf" value="{{csrf_token}}">
+<div class="campo"><label for="usuario">USUARIO</label><input id="usuario" name="usuario" autocomplete="username" required autofocus></div>
+<div class="campo"><label for="clave">CONTRASEÑA</label><input id="clave" name="clave" type="password" autocomplete="current-password" required></div>
+<button class="boton ancho" type="submit">Ingresar</button>
+</form><p class="ayuda">El administrador crea las cuentas de los operadores. No se necesitan cuentas adicionales para los vehículos.</p>
+</section>
+{% endblock %}

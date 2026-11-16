@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block titulo %}Registrar vehículo{% endblock %}
+{% block contenido %}<h1>Registrar vehículo</h1><p class="subtitulo">Crea una placa nueva antes de registrar su entrada.</p>
+<div class="dos-columnas"><section class="panel"><h2>Datos del vehículo</h2>
+<form method="post"><input type="hidden" name="_csrf" value="{{csrf_token}}">
+<div class="campo"><label>PLACA</label><input name="placa" maxlength="8" required placeholder="MNV345" value="{{request.form.get('placa','')}}"></div>
+<div class="campo"><label>TIPO</label><select name="tipo"><option value="CARRO">Carro</option><option value="MOTO">Motocicleta</option></select></div>
+<div class="campo"><label>AUTORIZACIÓN</label><select name="autorizado"><option value="1">Autorizado</option><option value="0">No autorizado</option></select></div>
+<div class="campo"><label>VIGENTE HASTA</label><input type="date" name="vigencia" value="{{request.form.get('vigencia','')}}" required></div>
+<p class="ayuda">Responsable del registro: <strong>{{usuario_actual.usuario}}</strong></p>
+<div class="botones"><button class="boton">Guardar vehículo</button><a class="boton secundario" href="{{url_for('inicio')}}">Cancelar</a></div></form></section>
+<aside class="panel"><h2>Importante</h2><p>Solo puedes crear placas que no estén registradas.</p><p>Si te equivocas al escribir una placa después de guardarla, informa al administrador.</p><p class="ayuda">Las mensualidades no se cobran en este sistema. Solo se consulta la fecha de vigencia.</p></aside></div>
+{% endblock %}

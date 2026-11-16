@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block titulo %}Registrar entrada{% endblock %}
+{% block contenido %}<h1>Registrar entrada</h1><p class="subtitulo">Registra el ingreso de un vehículo autorizado y selecciona una celda libre.</p>
+<div class="dos-columnas"><section class="panel"><h2>Datos de entrada</h2>
+<form method="post" action="{{url_for('entrada')}}"><input type="hidden" name="_csrf" value="{{csrf_token}}">
+<div class="campo"><label for="placa">PLACA DEL VEHÍCULO</label><input id="placa" name="placa" value="{{placa}}" maxlength="8" placeholder="MNV345" required></div>
+<div class="campo"><label for="celda">CELDA DISPONIBLE</label><select id="celda" name="celda_id" required><option value="">Selecciona un espacio</option>{%for c in celdas%}<option value="{{c.id}}">{{c.codigo}}</option>{%endfor%}</select></div>
+<p class="ayuda">Fecha, hora y empleado responsable se registrarán automáticamente.</p>
+{% if resultado and resultado.registrado %}<div class="mensaje {{'exito' if resultado.puede_entrar else 'error'}}">{{'Vehículo autorizado hasta '+resultado.vehiculo.vigencia_hasta if resultado.puede_entrar else 'El vehículo no cumple las condiciones de ingreso.'}}</div>{% endif %}
+<div class="botones"><button class="boton" type="submit" {%if not celdas%}disabled{%endif%}>Confirmar entrada</button><a class="boton secundario" href="{{url_for('inicio')}}">Cancelar</a></div>
+</form></section><aside class="panel"><h2>Validaciones</h2><p>✓ Placa registrada</p><p>✓ Autorización vigente</p><p>✓ Sin entrada activa</p><p>✓ Celda libre</p><p>✓ Cupos disponibles</p><hr><p class="ayuda">La celda queda libre al registrar la salida. No se asigna de forma fija.</p></aside></div>{% endblock %}

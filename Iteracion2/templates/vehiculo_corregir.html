@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% block titulo %}Corregir vehículo{% endblock %}
+{% block contenido %}<h1>Corregir vehículo</h1><p class="subtitulo">Acceso exclusivo para administrador. El cambio quedará registrado en auditoría.</p>
+<section class="panel formulario-mediano"><form method="post"><input type="hidden" name="_csrf" value="{{csrf_token}}">
+<div class="campo"><label>PLACA</label><input name="placa" maxlength="8" required value="{{actual.placa}}"></div>
+<div class="campo"><label>TIPO</label><select name="tipo"><option value="CARRO" {% if actual.tipo=='CARRO'%}selected{%endif%}>Carro</option><option value="MOTO" {% if actual.tipo=='MOTO'%}selected{%endif%}>Moto</option></select></div>
+<div class="campo"><label>AUTORIZACIÓN</label><select name="autorizado"><option value="1" {%if actual.autorizado%}selected{%endif%}>Autorizado</option><option value="0" {%if not actual.autorizado%}selected{%endif%}>No autorizado</option></select></div>
+<div class="campo"><label>VIGENTE HASTA</label><input type="date" name="vigencia" value="{{actual.vigencia_hasta}}" required></div>
+<div class="botones"><button class="boton">Guardar corrección</button><a class="boton secundario" href="{{url_for('consultar',placa=actual.placa)}}">Cancelar</a></div>
+</form></section>{% endblock %}
