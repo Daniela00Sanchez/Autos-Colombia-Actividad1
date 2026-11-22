@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.pytest_cache/
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+data/.session_key
+*.log
