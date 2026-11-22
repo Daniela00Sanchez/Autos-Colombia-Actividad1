@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block titulo %}Gestión de usuarios{% endblock %}
+{% block contenido %}<h1>Gestión de usuarios</h1><p class="subtitulo">Solo el administrador puede crear, editar y desactivar cuentas de operadores.</p>
+<div class="dos-columnas"><section class="panel"><h2>Usuarios registrados</h2>
+<div class="tabla-scroll"><table><thead><tr><th>NOMBRE</th><th>USUARIO</th><th>PERFIL</th><th>ESTADO</th></tr></thead><tbody>
+{% for u in usuarios %}<tr><td>{{u.nombre}}</td><td>{{u.usuario}}</td><td>{{u.rol|capitalize}}</td><td>{{'Activo' if u.activo else 'Inactivo'}}</td></tr>{% endfor %}</tbody></table></div></section>
+<section class="panel"><h2>Nuevo operador</h2><form method="post" action="{{url_for('usuario_nuevo')}}">
+<input type="hidden" name="_csrf" value="{{csrf_token}}"><div class="campo"><label>NOMBRE COMPLETO</label><input name="nombre" required maxlength="100"></div>
+<div class="campo"><label>USUARIO</label><input name="usuario" required maxlength="30"></div>
+<div class="campo"><label>CONTRASEÑA INICIAL</label><input type="password" name="clave" minlength="10" autocomplete="new-password" required></div>
+<button class="boton">Crear operador</button></form></section></div>
+<section class="panel"><h2>Editar o desactivar operadores</h2><p class="ayuda">Al desactivar una cuenta, sus sesiones se cierran. Sus acciones anteriores se conservan en auditoría.</p>
+{% for u in usuarios if u.rol=='operador' %}<form class="form-operador" method="post" action="{{url_for('usuario_editar',id_=u.id)}}">
+<input type="hidden" name="_csrf" value="{{csrf_token}}"><strong>{{u.usuario}}</strong>
+<label>Nombre <input name="nombre" value="{{u.nombre}}" maxlength="100" required></label>
+<label>Nueva contraseña (opcional) <input type="password" name="clave" autocomplete="new-password" minlength="10" placeholder="Dejar en blanco para conservarla"></label>
+<label>Estado <select name="activo"><option value="1" {%if u.activo%}selected{%endif%}>Activo</option><option value="0" {%if not u.activo%}selected{%endif%}>Inactivo</option></select></label>
+<button class="boton mini">Guardar cambios</button></form>
+{%if u.activo%}<form method="post" action="{{url_for('usuario_eliminar',id_=u.id)}}" onsubmit="return confirm('¿Eliminar el acceso de este operador? Su historial se conserva.')"><input type="hidden" name="_csrf" value="{{csrf_token}}"><button class="boton mini boton-peligro">Eliminar acceso de {{u.usuario}}</button></form>{%endif%}
+{% else %}<p class="ayuda">Todavía no existen operadores.</p>{% endfor %}
+</section>
+<section class="panel"><h2>Operadores conectados</h2><ul>{% for s in conectados %}<li>{{s.nombre}} ({{s.usuario}}) · Última actividad: {{s.ultimo_uso}}</li>{%else%}<li>No hay operadores con sesiones abiertas.</li>{%endfor%}</ul></section>{% endblock %}

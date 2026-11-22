@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block titulo %}Gestión de celdas{% endblock %}
+{% block contenido %}<h1>{{'Gestión de celdas' if usuario_actual.rol=='administrador' else 'Consulta de disponibilidad de celdas'}}</h1>
+<p class="subtitulo">Las celdas se ocupan durante la estancia del vehículo; no quedan asignadas de forma permanente.</p>
+<div class="indicadores indicadores-tres">
+<div class="indicador"><span>Celdas activas</span><strong>{{totales.total}}</strong></div>
+<div class="indicador"><span>Celdas disponibles</span><strong>{{totales.libres}}</strong></div>
+<div class="indicador"><span>Celdas ocupadas</span><strong>{{totales.ocupadas}}</strong></div></div>
+{% if usuario_actual.rol=='administrador' %}
+<section class="panel"><h2>Crear una nueva celda</h2><form class="campos" method="post" action="{{url_for('celda_nueva')}}">
+<input type="hidden" name="_csrf" value="{{csrf_token}}">
+<div class="campo"><label>CÓDIGO DE CELDA</label><input name="codigo" placeholder="C-21" maxlength="12" required></div><button class="boton">Crear celda</button></form></section>
+{% endif %}
+<section class="panel"><h2>Celdas registradas</h2><div class="tabla-scroll"><table><thead><tr><th>CÓDIGO</th><th>ESTADO</th><th>PLACA</th><th>ENTRADA</th>{% if usuario_actual.rol=='administrador'%}<th>ADMINISTRACIÓN</th>{% endif %}</tr></thead><tbody>
+{% for c in celdas %}<tr><td><strong>{{c.codigo}}</strong></td>
+<td>{% if not c.activa %}<span class="etiqueta fin">Inactiva</span>{% elif c.placa %}<span class="etiqueta ocupada">Ocupada</span>{% else %}<span class="etiqueta">Disponible</span>{% endif %}</td>
+<td>{{c.placa or '—'}}</td><td>{{c.entrada or '—'}}</td>
+{% if usuario_actual.rol=='administrador'%}<td><form class="form-fila" method="post" action="{{url_for('celda_editar',id_=c.id)}}">
+<input type="hidden" name="_csrf" value="{{csrf_token}}"><input aria-label="Código de celda" name="codigo" value="{{c.codigo}}" required maxlength="12">
+<select name="activa" aria-label="Estado"><option value="1" {%if c.activa%}selected{%endif%}>Activa</option><option value="0" {%if not c.activa%}selected{%endif%}>Inactiva</option></select>
+<button class="boton mini" {%if c.placa%}disabled title="No se modifica una celda ocupada"{%endif%}>Guardar</button></form>
+{%if not c.placa%}<form method="post" action="{{url_for('celda_eliminar',id_=c.id)}}" onsubmit="return confirm('¿Eliminar esta celda? Si tiene movimientos anteriores, el sistema no permitirá borrarla.')"><input type="hidden" name="_csrf" value="{{csrf_token}}"><button class="boton mini boton-peligro">Eliminar</button></form>{%endif%}</td>{% endif %}</tr>{%endfor%}
+</tbody></table></div><p class="ayuda">No se puede desactivar ni modificar una celda que esté ocupada.</p></section>{% endblock %}

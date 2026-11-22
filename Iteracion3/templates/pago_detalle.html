@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block titulo %}Comprobante de pago{% endblock %}
+{% block contenido %}<h1>Recibo de mensualidad {{pago.numero_recibo}}</h1><p class="subtitulo">Registro de pago del vehículo {{pago.placa}}.</p>
+<div class="dos-columnas"><section class="panel"><h2>Datos del recibo</h2><div class="datos">
+<div><small>PLACA</small><strong>{{pago.placa}}</strong></div>
+<div><small>VALOR</small><strong>$ {{'{:,.0f}'.format(pago.importe_pesos).replace(',','.')}} COP</strong></div>
+<div><small>FECHA DEL PAGO</small><strong>{{pago.fecha_pago}}</strong></div>
+<div><small>INICIO DE MENSUALIDAD</small><strong>{{pago.inicio_periodo}}</strong></div>
+<div><small>FIN DE MENSUALIDAD</small><strong>{{pago.fin_periodo}}</strong></div>
+<div><small>RESPONSABLE</small><strong>{{pago.responsable}}</strong></div>
+<div><small>MEDIO DE PAGO</small><strong>{{pago.medio_pago|capitalize}}</strong></div>
+<div><small>ESTADO</small><strong>{{pago.estado}}</strong></div></div>
+<p class="ayuda">La fecha de pago no modifica el inicio programado de la mensualidad.</p>
+<a class="boton" href="{{url_for('pago_recibo',id_pago=pago.id)}}">Descargar recibo PDF</a> <a class="boton secundario" href="{{url_for('pagos',placa=pago.placa)}}">Ver historial</a>
+</section><aside class="panel"><h2>Correcciones</h2><p>Los registros se conservan para poder revisar quién los realizó.</p>
+{%if usuario_actual.rol=='administrador' and pago.estado=='REGISTRADO'%}
+<form method="post" action="{{url_for('pago_anular',id_pago=pago.id)}}"><input type="hidden" name="_csrf" value="{{csrf_token}}"><div class="campo"><label>MOTIVO DE ANULACIÓN</label><textarea name="motivo" rows="3" minlength="8" maxlength="250" required></textarea></div><button class="boton boton-peligro" type="submit" onclick="return confirm('¿Confirmar la anulación?')">Anular pago</button></form>
+{%else%}<p class="ayuda">Solo el administrador puede anular un pago registrado.</p>{%endif%}</aside></div>
+{%endblock%}

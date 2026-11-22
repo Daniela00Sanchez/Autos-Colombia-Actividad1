@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block titulo %}Gestión de pagos{% endblock %}
+{% block contenido %}
+<h1>Gestión de pagos</h1>
+<p class="subtitulo">Consulta los pagos registrados y la vigencia de las mensualidades.</p>
+<div class="dos-columnas">
+<section class="panel"><h2>Historial de pagos</h2>
+<form class="campos" method="get"><div class="campo"><label>PLACA DEL VEHÍCULO</label><input name="placa" value="{{placa}}" maxlength="8" placeholder="Todas las placas"></div><button type="submit" class="boton">Buscar</button></form>
+<div class="tabla-scroll"><table><thead><tr><th>RECIBO</th><th>PLACA</th><th>FECHA DE PAGO</th><th>INICIO</th><th>FIN</th><th>VALOR</th><th>RESPONSABLE</th><th>ESTADO</th></tr></thead><tbody>
+{% for p in registros %}<tr><td><a href="{{url_for('pago_detalle',id_pago=p.id)}}">{{p.numero_recibo}}</a></td><td>{{p.placa}}</td><td>{{p.fecha_pago}}</td><td>{{p.inicio_periodo}}</td><td>{{p.fin_periodo}}</td><td>$ {{'{:,.0f}'.format(p.importe_pesos).replace(',','.')}}</td><td>{{p.responsable}}</td><td>{{p.estado}}</td></tr>{%else%}<tr><td colspan="8">No hay pagos para mostrar.</td></tr>{%endfor%}
+</tbody></table></div></section>
+<aside class="panel"><h2>Registrar mensualidad</h2><p>Los pagos los registra el operador o el administrador desde su sesión.</p><a class="boton" href="{{url_for('pago_nuevo')}}">Nuevo pago</a><hr><p class="ayuda">La fecha del pago puede ser anterior al inicio de la mensualidad. El recibo muestra ambas fechas.</p></aside></div>
+{% endblock %}

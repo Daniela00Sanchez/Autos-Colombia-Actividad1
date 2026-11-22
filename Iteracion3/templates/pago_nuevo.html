@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block titulo %}Registrar pago{% endblock %}
+{% block contenido %}<h1>Registrar pago de mensualidad</h1><p class="subtitulo">El pago queda asociado al vehículo y al usuario que lo registra.</p>
+<div class="dos-columnas"><section class="panel"><h2>Datos del pago</h2>
+<form method="get" class="campos"><div class="campo"><label>PLACA</label><input name="placa" value="{{placa}}" placeholder="PRB902" required maxlength="8"></div><div class="campo"><label>INICIO DE LA PRIMERA MENSUALIDAD (SI APLICA)</label><input type="date" name="primera_fecha" value="{{primera_fecha}}"></div><button type="submit" class="boton secundario">Consultar período</button></form>
+{% if placa %}<hr>
+<form method="post"><input type="hidden" name="_csrf" value="{{csrf_token}}"><input type="hidden" name="token_operacion" value="{{token_operacion}}"><input type="hidden" name="placa" value="{{placa}}"><input type="hidden" name="primera_fecha" value="{{primera_fecha}}">
+<div class="campo"><label>VALOR RECIBIDO (PESOS COLOMBIANOS)</label><input name="importe" type="number" min="1" max="50000000" step="1" placeholder="Ejemplo: 120000" required></div>
+<div class="campo"><label>MEDIO DE PAGO</label><select name="medio_pago">{% for medio in medios %}<option value="{{medio}}">{{medio|capitalize}}</option>{%endfor%}</select></div>
+<div class="campo"><label>REFERENCIA (OPCIONAL)</label><input name="referencia" maxlength="80" placeholder="Número de comprobante"></div>
+{% if periodo %}<div class="panel" style="background:#f7fafc"><h2>Período que se registrará</h2><div class="datos"><div><small>INICIO DE MENSUALIDAD</small><strong>{{periodo.inicio}}</strong></div><div><small>FIN DE MENSUALIDAD</small><strong>{{periodo.fin}}</strong></div></div><p class="ayuda">Estas fechas no dependen del día en que el cliente paga.</p></div>{%else%}<p class="ayuda">Para un vehículo sin pagos anteriores, indica arriba la fecha acordada para iniciar la mensualidad y presiona Consultar período.</p>{%endif%}
+<p class="ayuda">Responsable: <strong>{{usuario_actual.usuario}}</strong>. La fecha y hora de pago se guardan automáticamente.</p>
+<div class="botones"><button type="submit" class="boton" {%if not periodo%}disabled{%endif%}>Guardar pago y generar recibo</button><a class="boton secundario" href="{{url_for('pagos')}}">Cancelar</a></div></form>{%endif%}
+</section><aside class="panel"><h2>Importante</h2><p>Si el cliente paga antes, la mensualidad conserva su fecha programada.</p><p>El recibo mostrará por separado la fecha del pago, la fecha de inicio y la fecha de finalización.</p><p class="ayuda">El sistema registra los pagos informados por el operador; no realiza cobros bancarios en línea.</p></aside></div>
+{%endblock%}

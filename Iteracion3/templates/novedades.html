@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block titulo %}Novedades{% endblock %}
+{% block contenido %}
+<h1>Registrar novedades</h1><p class="subtitulo">Registra una observación relacionada con la estancia de un vehículo.</p>
+<div class="dos-columnas"><section class="panel"><h2>Nueva novedad</h2>
+<form method="post" action="{{ url_for('novedades') }}"><input type="hidden" name="_csrf" value="{{ csrf_token }}">
+<div class="campo"><label for="placa">PLACA DEL VEHÍCULO</label><input id="placa" name="placa" value="{{ placa }}" placeholder="TQR73F" maxlength="8" required></div>
+<div class="campo"><label for="tipo">TIPO DE NOVEDAD</label><select id="tipo" name="tipo">{% for item in tipos %}<option value="{{ item }}" {% if tipo==item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select></div>
+<div class="campo"><label for="descripcion">DESCRIPCIÓN</label><textarea id="descripcion" name="descripcion" maxlength="500" minlength="5" rows="5" required placeholder="Describe la novedad observada...">{{ descripcion }}</textarea></div>
+<p class="ayuda">La fecha y la hora se guardarán automáticamente. La placa debe estar dentro.</p>
+<div class="botones"><button class="boton" type="submit">Guardar novedad</button><a class="boton secundario" href="{{ url_for('inicio') }}">Cancelar</a></div>
+</form></section>
+<aside class="panel"><h2>Novedades registradas</h2>
+{% for n in recientes %}<div class="novedad"><strong>{{ n.placa }} · {{ n.tipo }}</strong><p>{{ n.descripcion }}</p><small>{{ n.fecha_hora_registro }}</small></div>{% else %}<p class="ayuda">No se han registrado novedades.</p>{% endfor %}
+<hr><p class="ayuda">Esta pantalla no modifica vehículos ni administra clientes.</p></aside></div>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% block titulo %}Auditoría{% endblock %}
+{% block contenido %}<h1>Historial de acciones y auditoría</h1><p class="subtitulo">Aquí se registra quién creó o corrigió información. Solo el administrador puede consultar estos datos.</p>
+<section class="panel"><div class="tabla-scroll"><table><thead><tr><th>FECHA Y HORA</th><th>RESPONSABLE</th><th>ACCIÓN</th><th>TIPO</th><th>REFERENCIA</th><th>ANTES</th><th>DESPUÉS</th></tr></thead><tbody>
+{% for a in registros %}<tr><td>{{a.fecha_hora}}</td><td>{{a.responsable}}</td><td>{{a.accion}}</td><td>{{a.entidad}}</td><td>{{a.referencia}}</td><td class="detalle">{{a.antes or '—'}}</td><td class="detalle">{{a.despues or '—'}}</td></tr>{%else%}<tr><td colspan="7">Todavía no hay acciones registradas.</td></tr>{%endfor%}</tbody></table></div></section>
+{% endblock %}
